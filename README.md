@@ -1,3 +1,7 @@
+# Overview
+
+* this repository maintains a script for archiving legacy web content for long-term storage
+
 # Installation
 
 * the blue_octopus.py script needs some Python modules to work
@@ -12,6 +16,8 @@ $ poetry install
 ```
 
 # Usage
+
+* the built-in help shows the available options
 
 ```
  ./blue_octopus.py -h                                                                                                         
@@ -69,6 +75,16 @@ $ tail -f octopus.log
 * get rid of global variables (W0603)
 
 # Feature Wishlist
+* save a better audit trail, e.g.:
+    * for each fragment, save the URL, where the content has been fetched from exactly
+    * consider dumping an additional file `result-annotated.json` containing the audit trail details
+    * alternatively, a jq script could be used to transform `result-annotated.json` into the desired `result.json` format
+    * do not apply ftfy fixes blindly, but save the old version, too, if ftfy found fixables
+* save stats for the bytes transferred in the web requests
+* unify log format
+* get rid of the producer, consumer pattern implementation
+    * consider using concurrent.futures instead of the low-level Threads
+    * use aiohttp, asyncio, respectively the asyncio.gather() primitive instead
 * write unit tests
 * write integration tests
 
