@@ -36,18 +36,16 @@ $ ./blue_octopus.py \
     -u 'https://legacywebsite.com/community/forums/8/?order=reply_count&direction=desc' \
     -p 1 \
     -t 3
-Writing to file result.json.
-
-$ 
+Writing to file result.json. 
 ```
 * the script will work on the task concurrently:
     * it will download the content
     * use ftfy recursively to fix multi-level mojibake
-    * it will arrange the content as a JSON array of JSON arrays
-    * it will save the JSON representation in a file named `result.json`
-    * it will **overwrite** an existing `result.json` file
+    * it will arrange the content as a list of lists
+    * it will represent the content as JSON in a UTF-8 encoded file named `result.json`
+    * when doing so, it will **overwrite** an existing `result.json` file in the current working directory
 
-* the script will write a log file to `octopus.log`
+* the script will append to the log file `octopus.log` in the current working directory
     * without the `-v` or `--verbose` option it will only log errors
     * you can follow the tail of this log file in another window
 
@@ -63,14 +61,12 @@ $ tail -f octopus.log
 2023-10-13T18-04-56-UTC+0200:INFO:CONSUMER:0:DEQUEUED:15
 2023-10-13T18-04-56-UTC+0200:INFO:CONSUMER:0:TERMINATING
 2023-10-13T18-04-56-UTC+0200:INFO:INIT:ALL CONSUMERS JOINED
-^C
-
-$ 
+^C 
 ```
 
 # Wishlist
 
-## Bugs
+## Known Bugs
 * use a buck slip data object to pass the parameters around instead of using seven function parameters (R0913)
 * get rid of global variables (W0603)
 
@@ -88,5 +84,4 @@ blue_octopus.py:228:4: W0603: Using the global statement (global-statement)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.80/10 (previous run: 9.78/10, +0.02)
-
 ```
