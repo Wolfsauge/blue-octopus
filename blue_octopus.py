@@ -215,8 +215,7 @@ def dump_my_result(my_ordered_result):
 
 def main() -> int:
     """Function implementing the one producer, many consumer with shared queue pattern."""
-    global my_urllib3_session
-    global ROOT_URL
+    global my_urllib3_session, ROOT_URL
 
     my_ordered_result: list = []
 
@@ -259,12 +258,14 @@ def main() -> int:
         const=logging.DEBUG,
     )
     args = parser.parse_args()
+
     logging.basicConfig(
         level=args.loglevel,
         format="%(asctime)s:%(levelname)s:%(message)s",
         datefmt="%Y-%m-%dT%H-%M-%S-UTC%z",
         filename="octopus.log",
     )
+
     write_log_message(logging.DEBUG, f"INIT:args:{args}")
 
     my_urllib3_session = urllib3.PoolManager(num_pools=1, maxsize=16)
