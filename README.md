@@ -1,8 +1,10 @@
 # Installation
 
-* you need some Python modules for blue_octopus.py to work, install them as you see fit
+* the blue_octopus.py script needs some Python modules to work
+* install the needed modules and their dependencies as you see fit
     - [urllib3](https://pypi.org/project/urllib3/)
     - [Beautiful Soup](https://pypi.org/project/beautifulsoup4/)
+    - [ftfy](https://pypi.org/project/ftfy/)
 
 * if you have Poetry, use this command
 ```
@@ -78,12 +80,13 @@ $
 
 ## Pylint Output
 ```
-$ pylint blue_octopus.py                                                                                                         
+$ pylint blue_octopus.py
 ************* Module blue_octopus
-blue_octopus.py:80:0: R0913: Too many arguments (6/5) (too-many-arguments)
-blue_octopus.py:139:0: R0913: Too many arguments (7/5) (too-many-arguments)
-blue_octopus.py:218:4: W0603: Using the global statement (global-statement)
+blue_octopus.py:81:0: R0913: Too many arguments (6/5) (too-many-arguments)
+blue_octopus.py:149:0: R0913: Too many arguments (7/5) (too-many-arguments)
+blue_octopus.py:228:4: W0603: Using the global statement (global-statement)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.78/10 (previous run: 9.78/10, +0.00)
+Your code has been rated at 9.80/10 (previous run: 9.78/10, +0.02)
+
 ```

@@ -120,8 +120,9 @@ def producer_function(lock, work_queue, url, pages):
 
 
 def do_ftfy_work(my_string: str) -> str:
+    """Recursively do all the work that can be done."""
     my_new_string = ftfy.fix_text(my_string)
-    if (my_new_string != my_string):
+    if my_new_string != my_string:
         do_ftfy_work(my_new_string)
         write_log_message(logging.INFO, "Ftfy did some work.")
     return my_string
@@ -225,6 +226,11 @@ def dump_my_result(my_ordered_result):
 def main() -> int:
     """Function implementing the one producer, many consumer with shared queue pattern."""
     global my_urllib3_session, ROOT_URL
+
+    # Eager version check so we fail nicely before possible syntax errors
+    if sys.version_info < (3, 11):  # noqa: UP036
+        sys.stdout.write("This script requires Python 3.11 or newer to run.\n")
+        sys.exit(1)
 
     my_ordered_result: list = []
 
