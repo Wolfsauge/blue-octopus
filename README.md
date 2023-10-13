@@ -68,11 +68,11 @@ $ tail -f octopus.log
 * use a buck slip data object to pass the parameters around instead of using seven function parameters (R0913)
 * get rid of global variables (W0603)
 
-## Feature Wishlist
+# Feature Wishlist
 * write unit tests
 * write integration tests
 
-## Pylint Output
+# Pylint Output
 ```
 $ pylint blue_octopus.py
 ************* Module blue_octopus
