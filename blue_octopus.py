@@ -123,9 +123,9 @@ def do_ftfy_work(my_string: str) -> str:
     """Recursively do all the work that can be done."""
     my_new_string = ftfy.fix_text(my_string)
     if my_new_string != my_string:
-        do_ftfy_work(my_new_string)
+        my_new_string = do_ftfy_work(my_new_string)
         write_log_message(logging.INFO, "Ftfy did some work.")
-    return my_string
+    return my_new_string
 
 
 def parse_story(soup, story):
