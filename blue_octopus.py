@@ -18,6 +18,7 @@ from urllib.parse import urljoin
 import urllib3
 
 from bs4 import BeautifulSoup
+import ftfy
 
 my_urllib3_session: urllib3.poolmanager.PoolManager
 ROOT_URL = "https://legacywebsite.org/community/forums/8/?order=reply_count&direction=desc"
@@ -118,6 +119,14 @@ def producer_function(lock, work_queue, url, pages):
     write_log_message(logging.INFO, "PRODUCER:TERMINATING")
 
 
+def do_ftfy_work(my_string: str) -> str:
+    my_new_string = ftfy.fix_text(my_string)
+    if (my_new_string != my_string):
+        do_ftfy_work(my_new_string)
+        write_log_message(logging.INFO, "Ftfy did some work.")
+    return my_string
+
+
 def parse_story(soup, story):
     """Function to parse a beautiful soup data structure of a story fragment
     into a story element and appending it to the story list. (recursion)"""
@@ -129,8 +138,8 @@ def parse_story(soup, story):
         message_author = article.get("data-author")
         message_text = article.find("div", class_="bbWrapper").text
         story_element = {}
-        story_element["author"] = message_author
-        story_element["txt"] = message_text
+        story_element["author"] = do_ftfy_work(message_author)
+        story_element["txt"] = do_ftfy_work(message_text)
         story.append(story_element)
 
     return story
