@@ -20,7 +20,7 @@ import urllib3
 from bs4 import BeautifulSoup
 
 my_urllib3_session: urllib3.poolmanager.PoolManager
-DEFAULT_URL = "https://legacywebsite.org/community/forums/8/?order=reply_count&direction=desc"
+ROOT_URL = "https://legacywebsite.org/community/forums/8/?order=reply_count&direction=desc"
 
 
 def write_log_message(severity: int, message: str) -> None:
@@ -81,7 +81,7 @@ def do_producer_work_recursion(
     lock, work_queue, url, pages, page_counter=0, qeventcount=0
 ):
     """Function for doing the producer's work."""
-    soup = get_soup(urljoin(DEFAULT_URL, url), "P")
+    soup = get_soup(urljoin(ROOT_URL, url), "P")
 
     for element in soup.find_all("div", class_="structItem-title"):
         item = element.a.get("href")
@@ -141,7 +141,7 @@ def parse_subforum(
 ):
     """Function to recursively parse a subforum and to insert the result into
     the results list using thread locking. (recursion)"""
-    soup = get_soup(urljoin(DEFAULT_URL, url), identifier)
+    soup = get_soup(urljoin(ROOT_URL, url), identifier)
 
     # Recursively scrape
 
@@ -168,8 +168,7 @@ def parse_subforum(
         story = parse_story(soup, story)
         with lock:
             # Critical section
-            # my_result.insert(len(my_ordered_result), story)
-            my_ordered_result[story_id] = story
+            my_ordered_result.insert(story_id, story)
 
 
 def do_consumer_recursion(
@@ -208,32 +207,26 @@ def consumer_function(my_ordered_result, lock, work_queue, identifier):
 
 def dump_my_result(my_ordered_result):
     """Function to dump the result list into a utf-8 encoded file."""
-    my_result = []
-
-    for entry in sorted(my_ordered_result):
-        write_log_message(logging.DEBUG, f"{entry}: {len(my_ordered_result[entry])}")
-        my_result.insert(len(my_result), my_ordered_result[entry])
-
     file_name = "result.json"
     print(f"Writing to file {file_name}.")
     with open(file_name, "w", encoding="utf-8") as file_pointer:
-        json.dump(my_result, file_pointer)
+        json.dump(my_ordered_result, file_pointer)
 
 
 def main() -> int:
-    """Function implementing the one producer, many consumer model with a single shared queue."""
+    """Function implementing the one producer, many consumer with shared queue pattern."""
     global my_urllib3_session
+    global ROOT_URL
 
-    # my_result = []
-    my_ordered_result: dict[int, list] = {}
+    my_ordered_result: list = []
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-u",
         "--url",
         type=str,
-        default=DEFAULT_URL,
-        help="scrape URL (DEFAULT_URL variable in script)",
+        default=ROOT_URL,
+        help="scrape URL (ROOT_URL variable in script)",
     )
     parser.add_argument(
         "-p",
@@ -282,6 +275,9 @@ def main() -> int:
 
     lock = threading.Lock()
     write_log_message(logging.INFO, f"INIT:threading_lock:{lock}:{type(lock)}")
+
+    # Get rid of the global ROOT_URL
+    ROOT_URL = args.url
 
     consumers = [
         Thread(target=consumer_function, args=(my_ordered_result, lock, work_queue, i))
