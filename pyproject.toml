@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "blue-octopus"
-version = "0.1.0"
+version = "1.0.0"
 description = "Downloads legacy web content and saves it as JSON file."
 authors = ["Wolfsauge"]
 license = "MIT"
