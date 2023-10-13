@@ -10,6 +10,7 @@ readme = ["README.md", "LICENSE"]
 python = "^3.11"
 urllib3 = "^2.0.6"
 beautifulsoup4 = "^4.12.2"
+ftfy = "^6.1.1"
 
 
 [build-system]
