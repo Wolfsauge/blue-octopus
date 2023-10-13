@@ -85,6 +85,7 @@ $ tail -f octopus.log
 * get rid of the producer, consumer pattern implementation
     * consider using concurrent.futures instead of the low-level Threads
     * use aiohttp, asyncio, respectively the asyncio.gather() primitive instead
+* HTTP/1.1 pipelining
 * write unit tests
 * write integration tests
 
