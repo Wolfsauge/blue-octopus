@@ -40,6 +40,7 @@ $
 ```
 * the script will work on the task concurrently:
     * it will download the content
+    * use ftfy recursively to fix multi-level mojibake
     * it will arrange the content as a JSON array of JSON arrays
     * it will save the JSON representation in a file named `result.json`
     * it will **overwrite** an existing `result.json` file
@@ -72,8 +73,6 @@ $
 * get rid of global variables (W0603)
 
 ## Features
-* use ftfy to fix mojibake found in most legacy web content
-    * apply ftfy recursively to fix multi-level mojibake
 * write unit tests
 * write integration tests
 
