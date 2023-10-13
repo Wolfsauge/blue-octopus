@@ -64,13 +64,11 @@ $ tail -f octopus.log
 ^C 
 ```
 
-# Wishlist
-
-## Known Bugs
+# Known Bugs
 * use a buck slip data object to pass the parameters around instead of using seven function parameters (R0913)
 * get rid of global variables (W0603)
 
-## Features
+## Feature Wishlist
 * write unit tests
 * write integration tests
 
