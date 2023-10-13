@@ -94,10 +94,17 @@ $ tail -f octopus.log
 ```
 $ pylint blue_octopus.py
 ************* Module blue_octopus
-blue_octopus.py:81:0: R0913: Too many arguments (6/5) (too-many-arguments)
-blue_octopus.py:149:0: R0913: Too many arguments (7/5) (too-many-arguments)
-blue_octopus.py:228:4: W0603: Using the global statement (global-statement)
+blue_octopus.py:83:0: R0913: Too many arguments (6/5) (too-many-arguments)
+blue_octopus.py:151:0: R0913: Too many arguments (7/5) (too-many-arguments)
+blue_octopus.py:234:4: W0603: Using the global statement (global-statement)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.80/10 (previous run: 9.78/10, +0.02)
+Your code has been rated at 9.80/10 (previous run: 9.80/10, +0.00)
+```
+
+# Ruff Output
+```
+$ ruff blue_octopus.py 
+blue_octopus.py:233:89: E501 Line too long (90 > 88 characters)
+Found 1 error.
 ```
