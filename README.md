@@ -46,7 +46,7 @@ Writing to file result.json.
 ```
 * the script will work on the task concurrently:
     * it will download the content
-    * use ftfy recursively to fix multi-level mojibake
+    * it will use ftfy recursively to fix multi-level mojibake
     * it will arrange the content as a list of lists
     * it will represent the content as JSON in a UTF-8 encoded file named `result.json`
     * when doing so, it will **overwrite** an existing `result.json` file in the current working directory
@@ -80,11 +80,12 @@ $ tail -f octopus.log
     * consider dumping an additional file `result-annotated.json` containing the audit trail details
     * alternatively, a jq script could be used to transform `result-annotated.json` into the desired `result.json` format
     * do not apply ftfy fixes blindly, but save the old version, too, if ftfy found fixables
+    * include more info for ftfy fixes at INFO log severity and story level
 * save stats for the bytes transferred in the web requests
 * unify log format
-* get rid of the producer, consumer pattern implementation
-    * consider using concurrent.futures instead of the low-level Threads
-    * use aiohttp, asyncio, respectively the asyncio.gather() primitive instead
+* rework the producer, consumer pattern implementation
+    * use aiohttp, asyncio, respectively the asyncio.gather() function, instead of the low-level Threads
+    * evaluate concurrent.futures instead of the low-level Threads
 * HTTP/1.1 pipelining
 * write unit tests
 * write integration tests

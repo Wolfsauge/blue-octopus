@@ -21,7 +21,9 @@ from bs4 import BeautifulSoup
 import ftfy
 
 my_urllib3_session: urllib3.poolmanager.PoolManager
-ROOT_URL = "https://legacywebsite.org/community/forums/8/?order=reply_count&direction=desc"
+ROOT_URL = (
+    "https://legacywebsite.org/community/forums/8/?order=reply_count&direction=desc"
+)
 
 
 def write_log_message(severity: int, message: str) -> None:
@@ -78,8 +80,8 @@ def get_soup(url, identifier):
     return soup
 
 
-def do_producer_work_recursion(
-    lock, work_queue, url, pages, page_counter=0, qeventcount=0
+def do_producer_recursion(
+    lock, work_queue, url, pages, page_counter=0, queue_event_count=0
 ):
     """Function for doing the producer's work."""
     soup = get_soup(urljoin(ROOT_URL, url), "P")
@@ -87,9 +89,9 @@ def do_producer_work_recursion(
     for element in soup.find_all("div", class_="structItem-title"):
         item = element.a.get("href")
         # ORDER: here an order needs to be established
-        queue_item = (qeventcount, item)
+        queue_item = (queue_event_count, item)
         work_queue.put(queue_item)
-        qeventcount += 1
+        queue_event_count += 1
         write_log_message(logging.DEBUG, f"PRODUCER:QUEUED:{item}")
 
     page_counter += 1
@@ -98,11 +100,11 @@ def do_producer_work_recursion(
     if page_counter < pages:
         if next_page is not None:
             next_page_url = next_page.get("href")
-            qeventcount = do_producer_work_recursion(
-                lock, work_queue, next_page_url, pages, page_counter, qeventcount
+            queue_event_count = do_producer_recursion(
+                lock, work_queue, next_page_url, pages, page_counter, queue_event_count
             )
 
-    return qeventcount
+    return queue_event_count
 
 
 def producer_function(lock, work_queue, url, pages):
@@ -110,8 +112,8 @@ def producer_function(lock, work_queue, url, pages):
     write_log_message(logging.INFO, "PRODUCER:STARTING")
 
     # Do the producer's work
-    qeventcount = do_producer_work_recursion(lock, work_queue, url, pages)
-    write_log_message(logging.INFO, f"PRODUCER:QUEUED:{qeventcount}")
+    queue_event_count = do_producer_recursion(lock, work_queue, url, pages)
+    write_log_message(logging.INFO, f"PRODUCER:QUEUED:{queue_event_count}")
 
     # Put signal, when done
     work_queue.put(None)
@@ -182,7 +184,7 @@ def parse_subforum(
 
 
 def do_consumer_recursion(
-    my_ordered_result, lock, work_queue, identifier, qeventcount=0
+    my_ordered_result, lock, work_queue, identifier, queue_event_count=0
 ):
     """Function to take a work unit from the shared queue and then doing
     the consumer's work in parallel with other consumers."""
@@ -195,7 +197,7 @@ def do_consumer_recursion(
             work_queue.put(item)
             write_log_message(logging.INFO, f"CONSUMER:{identifier}:EOQ")
             break
-        qeventcount += 1
+        queue_event_count += 1
 
         # Do the consumer's work
         write_log_message(logging.DEBUG, f"CONSUMER:{identifier}:RECURSING ON:{item}")
@@ -203,15 +205,19 @@ def do_consumer_recursion(
             my_ordered_result, lock, work_queue, identifier, item[1], [], item[0]
         )
         write_log_message(logging.DEBUG, f"CONSUMER:{identifier}:DONE WITH:{item}")
-    return qeventcount
+    return queue_event_count
 
 
 def consumer_function(my_ordered_result, lock, work_queue, identifier):
     """Function implementing the consumer pattern."""
     write_log_message(logging.INFO, f"CONSUMER:{identifier}:STARTING")
 
-    qeventcount = do_consumer_recursion(my_ordered_result, lock, work_queue, identifier)
-    write_log_message(logging.INFO, f"CONSUMER:{identifier}:DEQUEUED:{qeventcount}")
+    queue_event_count = do_consumer_recursion(
+        my_ordered_result, lock, work_queue, identifier
+    )
+    write_log_message(
+        logging.INFO, f"CONSUMER:{identifier}:DEQUEUED:{queue_event_count}"
+    )
     write_log_message(logging.INFO, f"CONSUMER:{identifier}:TERMINATING")
 
 
