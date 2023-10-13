@@ -1,9 +1,10 @@
 # Installation
 
-* you need some Python modules for blue_octopus.py to work
+* you need some Python modules for blue_octopus.py to work, install them as you see fit
     - [urllib3](https://pypi.org/project/urllib3/)
     - [Beautiful Soup](https://pypi.org/project/beautifulsoup4/)
 
+* if you have Poetry, use this command
 ```
 $ poetry install
 ```
